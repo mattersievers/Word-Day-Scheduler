@@ -1,7 +1,6 @@
 //Puts current date in header
 var createHeaderDay = function() {
-  var currentDate = moment().format('dddd MMM Do YYYY');
-  console.log(currentDate);  
+  var currentDate = moment().format('dddd MMM Do YYYY'); 
   $("#currentDay").text(currentDate);
 };
 
@@ -17,22 +16,23 @@ var createRowsEl = function(){
       .addClass("hour col-2")
 
       if(i+9 < 13){
-      timeEl.text( i+9 + "AM");
+      timeEl.text(i+9 + " AM");
       }
-      else if( i+9 > 12) {
-      timeEl.text( i-3 + "PM");
+      else if( i+9 > 12) {    
+      timeEl.text(i-3 + " PM");
       }
     
     //Create the text area for plans
+    var convertedDate = moment(i+9,"h");
     var planDescription = $("<div>")
       .addClass("description col-7")
       .text("Dummy " + i)
-      if (moment().diff(timeEl,"hours") < 1){
+      if (moment().diff(convertedDate, "hours") === 0  && moment().diff(convertedDate, "minutes") > 0 ){
         planDescription.addClass("present");
-      } else if (moment().isAfter(timeEl)){
-       planDescription.addClass("past");
-      } else if (moment().isBefore(timeEl)){
-       planDescription.addClass("future");
+      } else if (moment().isAfter(convertedDate)){
+        planDescription.addClass("past");
+      } else if (moment().isBefore(convertedDate)){
+        planDescription.addClass("future");
       }
 
     //Create save button
