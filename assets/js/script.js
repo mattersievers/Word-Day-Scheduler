@@ -1,3 +1,13 @@
+var schedule = {};
+
+//Saves the current Schedule
+saveSchedule = function() {
+  localStorage.setItem("schedule", JSON.stringify(schedule))
+};
+
+loadSchedule = function(){
+    tasks = JSON.parse(localStorage.getItem("tasks"));
+}
 //Puts current date in header
 var createHeaderDay = function() {
   var currentDate = moment().format('dddd MMM Do YYYY'); 
@@ -27,7 +37,7 @@ var createRowsEl = function(){
     var planDescription = $("<div>")
       .addClass("description col-7")
       .text("Dummy " + i)
-      if (moment().diff(convertedDate, "hours") === 0  && moment().diff(convertedDate, "minutes") > 0 ){
+      if (moment().diff(convertedDate, "hours") === 0  && moment().diff(convertedDate, "minutes") > 0){
         planDescription.addClass("present");
       } else if (moment().isAfter(convertedDate)){
         planDescription.addClass("past");
@@ -63,18 +73,33 @@ $('.container').on('click', '.description', function(){
 });
 
 $('.container').on('click','button',function(){
-    console.log("check")
   //get value of current text
   var descText = $("textarea")
   .val()
   .trim();
+console.log( "descText  is" + descText);
 
-  var status = $(this)
+  //get the parent time-block id attribute
+  var timeBlockId = $("textarea")
+    .closest(".time-block")
+    .attr("id");
+  
+  //get the textarea location
+  var textLocation = $("textarea")
+    .closest("textarea")
+    .index();
+
+  //Save schedule changes to localStorage
+ // schedule[timeBlockId][textLocation].text = descText;
+  saveSchedule();
   
   //recreat div element
   var descDiv = $("<div>")
     .addClass("decription col-7")
     .text(descText);
+
+  //replace textarea with div element
+  $(this).replaceWith(descDiv);
 
 });
 
@@ -85,8 +110,6 @@ createRowsEl();
 
 
 /*
-- Check the task color function
-- correct click input on description
 - make save button functional
 - create a saveItem/loadItem localStorage function
 */
