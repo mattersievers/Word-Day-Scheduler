@@ -3,10 +3,13 @@ var schedule = {};
 //color codes the description div elements
 var colorCode = function(hour,divObject){
     if (moment().diff(hour, "hours") === 0  && moment().diff(hour, "minutes") > 0){
+        divObject.removeClass("future past present");
         divObject.addClass("present");
       } else if (moment().isAfter(hour)){
+        divObject.removeClass("future past present");
         divObject.addClass("past");
       } else if (moment().isBefore(hour)){
+        divObject.removeClass("future past present");
         divObject.addClass("future");
       }
 }
@@ -129,7 +132,7 @@ var descDiv = $("<div>")
     blockHour = moment(blockHour,"h");
     
     colorCode(blockHour,descDiv);
-
+    console.log(blockHour);
   //replace textarea with div element
   $("[id="+timeBlockId+"]").children(".form-control").replaceWith(descDiv);
 });
@@ -140,8 +143,16 @@ loadSchedule();
 
 //update the color code regularly (every second)
 setInterval(function(){
-    var blockHour = $(this).closest(".time-block").children(".hour").text().trim().replace(" PM","").replace(" AM","");
-    if (parseInt(blockHour) < 8) {blockHour =JSON.stringify((parseInt(blockHour) +12))};
-    blockHour = moment(blockHour,"h");
-    colorCode(blockHour,)
+    for (var i=0; i < 9; i++) {
+        //get hour from page
+        var blockHour = $("[id="+i+"]").children(".hour").text().trim().replace(" PM","").replace(" AM","");
+      
+        if (parseInt(blockHour) < 8) {blockHour =JSON.stringify((parseInt(blockHour) +12))};
+        blockHour = moment(blockHour,"h");
+        
+        //get text content
+        var descText = $("[id="+i+"]").children(".description");
+        
+        colorCode(blockHour,descText)
+    }
 }, 1000);
